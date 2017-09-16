@@ -1,0 +1,237 @@
+                #  Copyright 2017 Xoriant Corporation.
+                #  Licensed under the Apache License, Version 2.0 (the "License");
+                #  you may not use this file except in compliance with the License.
+                #  You may obtain a copy of the License at
+                #  
+                #       http://www.apache.org/licenses/LICENSE-2.0
+
+                #  
+                #  Unless required by applicable law or agreed to in writing, software
+                #  distributed under the License is distributed on an "AS IS" BASIS,
+                #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                #  See the License for the specific language governing permissions and
+                #  limitations under the License.
+                
+                
+                
+                
+                swagger: "2.0"
+                info:
+                description: "Appointment"
+                version: "1.0.0"
+                title: "Doctor Appointment"
+                host: "localhost:8080"
+                basePath: "/appointmentMgmt"
+                schemes:
+                - "http"
+                
+                paths:
+                /doctors/{doctorId}:
+                    get:
+                      tags:
+                      - "Doctor"
+                      description: Get Doctos based on Id specified
+                      summary: Find Doctos by Id
+                      operationId: getDoctorsById
+                      produces:
+                      - "application/json"
+                      responses:
+                        200:
+                          description: Doctor response
+                          schema:
+                            type: array
+                            items:
+                              $ref: '#/definitions/Doctor'
+                        400:
+                          description: "Invalid Id supplied"
+                        404:
+                          description: "Doctor not found"
+                        405:
+                          description: "Validation exception"
+                      parameters:
+                      - name: doctorId
+                        in: path
+                        description: Id of Doctor to find
+                        required: true
+                        type: array
+                        items:
+                          type: string
+                
+                    post:
+                      tags:
+                      - "Doctor"
+                      summary: "Updates a Doctor with form data"
+                      description: ""
+                      operationId: "updateDoctor"
+                      consumes:
+                      - "application/x-www-form-urlencoded"
+                      produces:
+                      - "application/xml"
+                      - "application/json"
+                      parameters:
+                      - name: doctorId
+                        in: "path"
+                        description: "Id of Doctor that needs to be updated"
+                        required: true
+                        type: "integer"
+                        format: "int64"
+                      - name: "name"
+                        in: "formData"
+                        description: "Updated name of the Doctor"
+                        required: false
+                        type: "string"
+                      responses:
+                        405:
+                          description: "Invalid input"
+                          
+                    delete:
+                      tags:
+                      - "Doctor"
+                      summary: "Deletes a Doctor"
+                      description: "delete operation"
+                      operationId: "deleteDoctor"
+                      produces:
+                      - "application/xml"
+                      - "application/json"
+                      parameters:
+                      - name: "doctorId"
+                        in: "path"
+                        description: "Doctor Id to delete"
+                        required: true
+                        type: "integer"
+                        format: "int64"
+                      responses:
+                        400:
+                          description: "Invalid Id supplied"
+                        404:
+                          description: "Doctor not found"
+                          
+                  /doctors:
+                    post:
+                      summary: "Post new Doctor info"
+                      description: "endpoint for posting a newly created Doctor entity to the server"
+                      operationId: "createDoctor"
+                      parameters:
+                        - name: payload
+                          in: body
+                          required: true
+                          description: A single JSON object containing a Doctor definition
+                          schema:
+                            $ref: '#/definitions/Doctor'
+                      responses: 
+                        200:
+                          description: indicates a successful update
+                        
+                  /slots/{slotId}:
+                    get:
+                      tags:
+                      - "Slots"
+                      description: Get Slots for specified slotId
+                      summary: Find Slots by slotId
+                      operationId: getSlotsBySlotId
+                      produces:
+                      - "application/json"
+                      responses:
+                        200:
+                          description: Slots response
+                          schema:
+                           type: array
+                           items:
+                              $ref: '#/definitions/Slot'
+                        400:
+                          description: "Invalid Id supplied"
+                        404:
+                          description: "Slot not found"
+                        405:
+                          description: "Validation exception"
+                      parameters:
+                      - name: slotId
+                        in: path
+                        description: slotId to find
+                        required: true
+                        type: array
+                        items:
+                          type: string
+                    post:
+                     tags:
+                      - "Slots"
+                      summary: "Updates a Slot with form data"
+                      description: ""
+                      operationId: "updateSlotsForDoctorId"
+                      consumes:
+                      - "application/x-www-form-urlencoded"
+                      produces:
+                      - "application/xml"
+                      - "application/json"
+                      parameters:
+                      - name: slotId
+                        in: "path"
+                        description: "ID of Slot that needs to be updated"
+                        required: true
+                        type: "integer"
+                        format: "int64"
+                      - name: "doctorId"
+                        in: "formData"
+                        description: "Updated Doctor Id"
+                        required: false
+                        type: "integer"
+                        format: "int64"
+                      responses:
+                        405:
+                          description: "Invalid input"
+                    delete:
+                      tags:
+                      - "Slots"
+                      summary: "Deletes Slots for an Id"
+                      description: "delete operation"
+                      operationId: "deleteSlotsById"
+                      produces:
+                      - "application/xml"
+                      - "application/json"
+                      parameters:
+                      - name: "slotId"
+                        in: "path"
+                        description: "Slot Id to delete"
+                        required: true
+                        type: "integer"
+                        format: "int64"
+                      responses:
+                        400:
+                          description: "Invalid Id supplied"
+                        404:
+                          description: "Slot not found"
+                        
+                definitions:
+                Slot:
+                    type: "object"
+                    properties:
+                      slotId:
+                        type: "integer"
+                        format: "int64"
+                      startTime:
+                        type: "string"
+                        format: "datetime"
+                      endTime:
+                        type: "string"
+                        format: "datetime"
+                      doctorId:  
+                        type: integer
+                        items:
+                          $ref: '#/definitions/Doctor' 
+                          
+                  Doctor:
+                    type: "object"
+                    properties:
+                      doctorId:
+                        type: "integer"
+                        format: "int64"
+                      doctorName:
+                        type: "string"
+                      visitingCharge:
+                        type: "integer"
+                        format: "int64"
+                      availability:
+                        type: "integer"
+                        format: "int64"
+                      speciality:
+                        type: "string"
